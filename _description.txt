@@ -1,0 +1,5 @@
+Colored entities (spheres) representing different levels within food web: Predator, Prey, Plant, Fungus.  Predator eats Prey and spawns more Predators, Prey eats Plants and spawn more Prey, Plant consistantly spawns more Plants and may self-spawn slowly without parent Plant, dead Predator and Prey spawn Fungus.  Fungus increases chance of randomly spawning Plants.  Plants and Fungus do not move.
+
+Player can take movement control of any Predator or Prey currently alive, to keep this entertaining.  When not controlling an entity, Player can zoom out and move camera over the playing field.
+
+Inheritance will be demonstrated with Entity => Entity type relationships.  Polymorphism will be demonstrated overriding base class methods like Consume() and Reproduce().  Encapsulation can be demonstrated through read-only properties such as: Nutrition and Age. Overarching WorldController class will determine where to spawn (Fungus) or kill off (based on Age) entities.
