@@ -1069,7 +1069,7 @@ GameObject:
   - component: {fileID: 235450722}
   - component: {fileID: 235450723}
   m_Layer: 5
-  m_Name: PopulationSize Slider
+  m_Name: Fungus PopulationSize Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1149,7 +1149,19 @@ MonoBehaviour:
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 235450723}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &243492235
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1325,7 @@ GameObject:
   - component: {fileID: 310176675}
   - component: {fileID: 310176676}
   m_Layer: 5
-  m_Name: MaxLifespan Slider
+  m_Name: Plant MaxLifespan Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1393,7 +1405,19 @@ MonoBehaviour:
   m_Value: 60
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 310176676}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &345748694
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,7 +1694,7 @@ GameObject:
   - component: {fileID: 372499188}
   - component: {fileID: 372499189}
   m_Layer: 5
-  m_Name: PopulationSize Slider
+  m_Name: Predator PopulationSize Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1750,7 +1774,19 @@ MonoBehaviour:
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 372499189}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &381608967
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,7 +2081,7 @@ GameObject:
   - component: {fileID: 466950282}
   - component: {fileID: 466950283}
   m_Layer: 5
-  m_Name: MaxLifespan Slider
+  m_Name: Prey MaxLifespan Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2125,7 +2161,19 @@ MonoBehaviour:
   m_Value: 60
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 466950283}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &503255768
 GameObject:
   m_ObjectHideFlags: 0
@@ -2829,7 +2877,7 @@ GameObject:
   - component: {fileID: 707540896}
   - component: {fileID: 707540897}
   m_Layer: 5
-  m_Name: ProliferationRate Slider
+  m_Name: Fungus ProliferationRate Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2909,7 +2957,19 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 707540897}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &749257419
 GameObject:
   m_ObjectHideFlags: 0
@@ -2921,7 +2981,7 @@ GameObject:
   - component: {fileID: 749257420}
   - component: {fileID: 749257421}
   m_Layer: 5
-  m_Name: ProliferationRate Slider
+  m_Name: Predator ProliferationRate Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3001,7 +3061,19 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 749257421}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &787782153
 GameObject:
   m_ObjectHideFlags: 0
@@ -3174,6 +3246,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &805401051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 805401053}
+  - component: {fileID: 805401052}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &805401052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805401051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba5a22ad59917d640b534fbdad8c8d86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &805401053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805401051}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 556.74084, y: 347.2116, z: -5.426855}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &846989633
 GameObject:
   m_ObjectHideFlags: 0
@@ -3320,7 +3436,7 @@ GameObject:
   - component: {fileID: 856591495}
   - component: {fileID: 856591496}
   m_Layer: 5
-  m_Name: PopulationSize Slider
+  m_Name: Prey PopulationSize Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3400,7 +3516,19 @@ MonoBehaviour:
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 856591496}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &876286296
 GameObject:
   m_ObjectHideFlags: 0
@@ -5250,7 +5378,7 @@ GameObject:
   - component: {fileID: 1378902417}
   - component: {fileID: 1378902418}
   m_Layer: 5
-  m_Name: MaxLifespan Slider
+  m_Name: Predator MaxLifespan Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5330,7 +5458,19 @@ MonoBehaviour:
   m_Value: 60
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1378902418}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1383596765
 GameObject:
   m_ObjectHideFlags: 0
@@ -5765,7 +5905,7 @@ GameObject:
   - component: {fileID: 1484025893}
   - component: {fileID: 1484025894}
   m_Layer: 5
-  m_Name: PopulationSize Slider
+  m_Name: Plant PopulationSize Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5845,7 +5985,19 @@ MonoBehaviour:
   m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1484025894}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1513341094
 GameObject:
   m_ObjectHideFlags: 0
@@ -6105,7 +6257,7 @@ GameObject:
   - component: {fileID: 1584820039}
   - component: {fileID: 1584820040}
   m_Layer: 5
-  m_Name: MaxLifespan Slider
+  m_Name: Fungus MaxLifespan Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6185,7 +6337,19 @@ MonoBehaviour:
   m_Value: 60
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1584820040}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1586831027
 GameObject:
   m_ObjectHideFlags: 0
@@ -6810,6 +6974,7 @@ GameObject:
   - component: {fileID: 1708604901}
   - component: {fileID: 1708604900}
   - component: {fileID: 1708604899}
+  - component: {fileID: 1708604903}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -6902,6 +7067,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1708604903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708604898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3851c028f894ea547baebfd2ee67ecfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1738064930
 GameObject:
   m_ObjectHideFlags: 0
@@ -7179,7 +7356,7 @@ GameObject:
   - component: {fileID: 1806653550}
   - component: {fileID: 1806653551}
   m_Layer: 5
-  m_Name: ProliferationRate Slider
+  m_Name: Prey ProliferationRate Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7259,7 +7436,19 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1806653551}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1837992936
 GameObject:
   m_ObjectHideFlags: 0
@@ -7897,7 +8086,7 @@ GameObject:
   - component: {fileID: 2103601008}
   - component: {fileID: 2103601009}
   m_Layer: 5
-  m_Name: ProliferationRate Slider
+  m_Name: Plant ProliferationRate Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7977,7 +8166,19 @@ MonoBehaviour:
   m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 805401052}
+        m_TargetAssemblyTypeName: DataManager, Assembly-CSharp
+        m_MethodName: SliderValueChanged
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2103601009}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2111681754
 GameObject:
   m_ObjectHideFlags: 0

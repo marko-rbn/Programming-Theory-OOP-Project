@@ -2,7 +2,7 @@ Colored entities (spheres and cubes) representing different levels within food w
 
 Player can take movement control of any Predator or Prey currently alive, to keep this entertaining.  When not controlling an entity, Player can zoom out and move camera over the playing field.
 
-Inheritance will be demonstrated with Entity => Entity type relationships.  Polymorphism will be demonstrated overriding base class methods like Consume(), Reproduce(), Move().  Encapsulation can be demonstrated through read-only properties such as: Nutrition and Age. Overarching WorldController class will determine where to spawn (Fungus) or kill off (based on Age) entities.
+Inheritance will be demonstrated with Entity => Entity type relationships.  Polymorphism will be demonstrated overriding base class methods like Consume(), Reproduce(), Move().  Encapsulation can be demonstrated through read-only properties such as: Nutrition and Age. MainManager class will determine where to spawn (Fungus) or kill off (based on Age) entities.
 
 Start scene:
 Select area size.
