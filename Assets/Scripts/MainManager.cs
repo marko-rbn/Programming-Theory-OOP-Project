@@ -24,13 +24,14 @@ public class MainManager : MonoBehaviour
 
         //spawn everything according to population size settings
         entityContainer = GameObject.Find("Entity Container");
-        int predatorCount = 10; // DataManager.Instance.settings.Predator_PopulationSize;
+        int predatorCount = DataManager.Instance.settings.Predator_PopulationSize;
         for (int i = 0; i < predatorCount; i++)
         {
             //random location
             int x = Random.Range(-490, 490);
-            int y = Random.Range(-490, 490);
-            Instantiate(predatorPrefab, entityContainer.transform);
+            int z = Random.Range(-490, 490);
+            var newEntity = Instantiate(predatorPrefab, entityContainer.transform);
+            newEntity.transform.Translate(new Vector3(x, 10, z));
         }
     }
 
