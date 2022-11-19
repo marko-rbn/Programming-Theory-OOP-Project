@@ -6,10 +6,7 @@ public class CameraController : MonoBehaviour
 {
     public float movementSpeed = 10;
     public float rotationSpeed = 90;
-    private Vector3 motion;
-    private Vector3 rotation;
     private Rigidbody rb;
-    Vector3 m_EulerAngleVelocity;
 
     // Start is called before the first frame update
     void Start()
@@ -20,23 +17,23 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //motion = new Vector3(0, 0, Input.GetAxisRaw("Vertical")) * movementSpeed;
-        motion = transform.forward * Input.GetAxisRaw("Vertical") * movementSpeed;
-        //rb.velocity = motion;
+        //Move
+        Vector3 motionForward = transform.forward * Input.GetAxisRaw("Vertical") * movementSpeed;
+        Vector3 motionUp = Vector3.zero;  //no vertical motion, unless X or Z are pressed and height is within constraints
+        if (Input.GetKey(KeyCode.X) && transform.position.y <= 500)  //max height 500
+        {
+            motionUp = transform.up * movementSpeed;
+        } else if (Input.GetKey(KeyCode.Z) && transform.position.y >= 50)  //min height 50
+        {
+            motionUp = transform.up * (-movementSpeed);
+        }
+        rb.MovePosition(transform.position + motionForward + motionUp);
 
-        rb.MovePosition(transform.position + motion);
-
-        //float rotationAmount = Input.GetAxis("Horizontal");
-        //rotation = new Vector3(0, rotationAmount, 0);
-        //transform.eulerAngles = rotation;
-
-        //rb.MoveRotation(new Quaternion(1, 0, 0, 0));
-
-        m_EulerAngleVelocity = new Vector3(0, Input.GetAxis("Horizontal") * rotationSpeed, 0);
-        Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * Time.fixedDeltaTime);
+        //Rotate
+        Vector3 angularVelocity = new Vector3(0, Input.GetAxis("Horizontal") * rotationSpeed, 0);
+        Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
         rb.MoveRotation(rb.rotation * deltaRotation);
 
-        //TODO: try attaching this to camera directly!
         //TODO: 3rd person cam movement: https://youtu.be/sNmeK3qK7oA
     }
 }
