@@ -133,4 +133,19 @@ public class Settings
         return null;
     }
 
+    public float GetPropertyForTag(string tag, string settingName)
+    {
+        string propName = tag + "_" + settingName;
+        PropertyInfo prop = this.GetType().GetProperty(propName);
+        if (prop != null)
+        {
+            return System.Convert.ToSingle(prop.GetValue(this));
+        }
+
+        //something went wrong
+        Debug.Log("Settings property " + propName + " not found!");
+        return 0f;
+    }
+
+
 }

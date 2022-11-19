@@ -73,7 +73,6 @@ public class StartUIManager : MonoBehaviour
         var labelObject = slider.gameObject.transform.Find("Label").gameObject;
         string stringValue = value.ToString("0.##");
         labelObject.GetComponent<TextMeshProUGUI>().SetText(prefix + ": " + stringValue);
-        //TODO: format float value to 2 decimals
     }
 
     public void SliderValueChanged(Slider slider)

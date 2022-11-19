@@ -12,6 +12,11 @@ public class MainManager : MonoBehaviour
 
     private GameObject entityContainer;
 
+    private void Awake()
+    {
+        entityContainer = GameObject.Find("Entity Container");     
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,14 +28,21 @@ public class MainManager : MonoBehaviour
         }
 
         //spawn everything according to population size settings
-        entityContainer = GameObject.Find("Entity Container");
-        int predatorCount = DataManager.Instance.settings.Predator_PopulationSize;
-        for (int i = 0; i < predatorCount; i++)
+        SpawnAllEntitiesOfType(fungusPrefab);
+        SpawnAllEntitiesOfType(plantPrefab);
+        SpawnAllEntitiesOfType(preyPrefab);
+        SpawnAllEntitiesOfType(predatorPrefab);
+    }
+
+    private void SpawnAllEntitiesOfType(GameObject entityPrefab)
+    {
+        int entityCount = (int)DataManager.Instance.settings.GetPropertyForTag(entityPrefab.tag, "PopulationSize");
+        for (int i = 0; i < entityCount; i++)
         {
             //random location
             int x = Random.Range(-490, 490);
             int z = Random.Range(-490, 490);
-            var newEntity = Instantiate(predatorPrefab, entityContainer.transform);
+            var newEntity = Instantiate(entityPrefab, entityContainer.transform);
             newEntity.transform.Translate(new Vector3(x, 10, z));
         }
     }
