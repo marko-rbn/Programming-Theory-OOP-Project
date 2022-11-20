@@ -37,7 +37,8 @@ public class MainManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //TODO: handle click on Entity to select as target for info display panel
+        //TODO: and follow Entity with camera
     }
 
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)
@@ -67,6 +68,6 @@ public class MainManager : MonoBehaviour
     public void OnEntityDeath(Entity corpse)
     {
         //spawn Fungus
-        //Debug.Log("TODO: clean up the dead.");
+        SpawnOne(fungusPrefab);
     }
 }

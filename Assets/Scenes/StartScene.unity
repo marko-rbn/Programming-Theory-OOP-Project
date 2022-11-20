@@ -3014,7 +3014,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.1
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3118,7 +3118,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.1
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3335,6 +3335,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5a22ad59917d640b534fbdad8c8d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialEntityEnergy: 75
+  corpseDecaySeconds: 10
+  lifeClockBonusForFeeding: 5
+  initialSpawnRange: 480
+  plantEnergyIncreasePerLifeTic: 2
+  plantDispersalAngle: 10
 --- !u!4 &805401053
 Transform:
   m_ObjectHideFlags: 0
@@ -7480,7 +7486,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.1
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -8210,7 +8216,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.1
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:

@@ -11,13 +11,14 @@ public class PredatorController : Entity
     {
         timeToLiveRemaining = DataManager.Instance.settings.Predator_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Predator_ProliferationRate;
+        PopUpSelf();
     }
 
     protected override void LifeTic()
     {
-        //TODO: make decisions and live!
+        //make decisions and live!
 
-        //TEMP: find closest Prey and move to it
+        //find closest Prey and move to it
         GameObject target = FindClosestByTag("Prey");
         if (target != null)
         {
@@ -35,7 +36,8 @@ public class PredatorController : Entity
             isActive = true;  //enable normal activity after spawning
             return;
         }
-        if (isActive)
+
+        if (isActive && !isDead)
         {
             var entity = collision.collider.GetComponent<Entity>();
             if (target.CompareTag("Prey") && !entity.isDead)

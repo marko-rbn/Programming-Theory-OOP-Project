@@ -13,6 +13,8 @@ public class DataManager : MonoBehaviour
     public int corpseDecaySeconds = 10;
     public int lifeClockBonusForFeeding = 5;
     public int initialSpawnRange = 480;
+    public float plantEnergyIncreasePerLifeTic = 2;
+    public float plantDispersalAngle = 10f;
 
     public static DataManager Instance;
 

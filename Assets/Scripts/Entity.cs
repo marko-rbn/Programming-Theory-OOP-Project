@@ -5,19 +5,21 @@ using UnityEngine;
 public abstract class Entity : MonoBehaviour
 {
     [SerializeField]
+    public bool isDead { get; protected set; }
+    [SerializeField]
+    public bool isActive { get; protected set; }
+    [SerializeField]
+    public float storedEnergy { get; protected set; }  //spend energy to move and reproduce, gain energy from food or photosynthesis
+
+    [SerializeField]
     protected int timeToLiveRemaining;  //in seconds
     [SerializeField]
     protected float proliferationRate;  //between 0 and 1
-    [SerializeField]
-    public bool isDead { get; protected set; }
-    public bool isActive { get; protected set; }
 
     protected Rigidbody rb;
-    [SerializeField]
-    public float storedEnergy { get; protected set; }  //spend energy to move, get energy from food
-
     private MainManager mainManager;
 
+    //don't override Awake
     private void Awake()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
@@ -28,9 +30,12 @@ public abstract class Entity : MonoBehaviour
         InvokeRepeating("Agify", 1, 1);
     }
 
-    private void Start()
+    protected void PopUpSelf(float dispersalAngle = 0)
     {
-        rb.AddForce(Vector3.up * 1000);  //upward impulse
+        float xDeviation = Random.Range(-dispersalAngle, dispersalAngle);
+        float zDeviation = Random.Range(-dispersalAngle, dispersalAngle);
+        Vector3 popDirection = new Vector3(xDeviation, 1, zDeviation).normalized;
+        rb.AddForce(popDirection * 1000);  //upward push
     }
     
     private void Update()
@@ -72,15 +77,22 @@ public abstract class Entity : MonoBehaviour
 
         mainManager.OnEntityDeath(this);  //let manager know
 
-        Invoke("Decay", DataManager.Instance.corpseDecaySeconds);
+        //TODO: probably try to move this code to child classes, since it's specific
+        if (gameObject.CompareTag("Predator") || gameObject.CompareTag("Prey"))
+        {
+            Invoke("Decay", DataManager.Instance.corpseDecaySeconds);
+        } else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Decay()
     {
-        //TODO: spawn some Fungus?
         Destroy(gameObject);
     }
 
+    //TODO: rename to AdjustEnergy(), use energy level to resize the entity
     protected void BurnEnergy(float amount)
     {
         storedEnergy -= amount;
@@ -117,10 +129,6 @@ public abstract class Entity : MonoBehaviour
         return closest;
     }
 
-    public void PunchUp()
-    {
-    }
-
     protected virtual void Consume(Entity target)
     {
         storedEnergy += (target.storedEnergy / 2);  //transfer half of target's energy to self
@@ -128,10 +136,25 @@ public abstract class Entity : MonoBehaviour
         target.OnDeath();  //kill target
     }
 
+    //Polymorphism ;)
+    //Plant and Fungus don't need another to reproduce
+    protected virtual void TryReproduce()
+    {
+        bool successByChance = Random.Range(0f, 1f) < proliferationRate;
+        if (storedEnergy >= 100 && successByChance)
+        {
+            //ask manager to spawn another of same type
+            BurnEnergy(50);
+            mainManager.SpawnOne(gameObject, false);
+        }
+    }
+
+    //Polymorphism ;)
+    //Predator and Prey require another (target) to reproduce
     protected virtual void TryReproduce(Entity target)
     {
-        
-        if (storedEnergy >= 100 && target.storedEnergy >= 100 && Random.Range(0f, 1f) < proliferationRate)
+        bool successByChance =  Random.Range(0f, 1f) < proliferationRate;
+        if (storedEnergy >= 100 && target.storedEnergy >= 100 && successByChance)
         {
             //ask manager to spawn another of same type
             BurnEnergy(50);
