@@ -8,6 +8,7 @@ TagManager:
   - Predator
   - Plant
   - Prey
+  - Ground
   layers:
   - Default
   - TransparentFX

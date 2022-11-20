@@ -34,28 +34,39 @@ public class MainManager : MonoBehaviour
         SpawnAllEntitiesOfType(predatorPrefab);
     }
 
-    private void SpawnAllEntitiesOfType(GameObject entityPrefab)
-    {
-        int entityCount = (int)DataManager.Instance.settings.GetPropertyForTag(entityPrefab.tag, "PopulationSize");
-        for (int i = 0; i < entityCount; i++)
-        {
-            //random location
-            int x = Random.Range(-490, 490);
-            int z = Random.Range(-490, 490);
-            var newEntity = Instantiate(entityPrefab, entityContainer.transform);
-            newEntity.transform.Translate(new Vector3(x, 10, z));
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void OnDeath(Entity corpse)
+    private void SpawnAllEntitiesOfType(GameObject entityPrefab)
     {
-        //spawn Fungus and remove corpse
-        Debug.Log("TODO: clean up the dead.");
+        int entityCount = (int)DataManager.Instance.settings.GetPropertyForTag(entityPrefab.tag, "PopulationSize");
+        for (int i = 0; i < entityCount; i++)
+        {
+            SpawnOne(entityPrefab);
+        }
+    }
+
+    public void SpawnOne(GameObject entityPrefab, bool randomLoc = true)
+    {
+        int x = (int)entityPrefab.gameObject.transform.position.x;
+        int z = (int)entityPrefab.gameObject.transform.position.z;
+        if (randomLoc)
+        {
+            //random location for all initial spawns
+            int rng = DataManager.Instance.initialSpawnRange;
+            x = Random.Range(-rng, rng);
+            z = Random.Range(-rng, rng);
+        }
+        GameObject newEntity = Instantiate(entityPrefab, entityContainer.transform);
+        newEntity.transform.position = new Vector3(x, 15, z);
+    }
+
+    public void OnEntityDeath(Entity corpse)
+    {
+        //spawn Fungus
+        //Debug.Log("TODO: clean up the dead.");
     }
 }

@@ -9,7 +9,8 @@ public abstract class Entity : MonoBehaviour
     [SerializeField]
     protected float proliferationRate;  //between 0 and 1
     [SerializeField]
-    public bool isDead { get; private set; }
+    public bool isDead { get; protected set; }
+    public bool isActive { get; protected set; }
 
     protected Rigidbody rb;
     [SerializeField]
@@ -22,48 +23,75 @@ public abstract class Entity : MonoBehaviour
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         rb = GetComponent<Rigidbody>();
         isDead = false;
-        storedEnergy = 50;
+        isActive = false;
+        storedEnergy = DataManager.Instance.initialEntityEnergy;
         InvokeRepeating("Agify", 1, 1);
     }
 
+    private void Start()
+    {
+        rb.AddForce(Vector3.up * 1000);  //upward impulse
+    }
+    
+    private void Update()
+    {
+        if (transform.position.y < 0) Destroy(gameObject);  //if it ever ends up below the ground plane, destroy it
+    }
+
     // tick down the life counter
-    void Agify()
+    private void Agify()
     {
         timeToLiveRemaining--;
         if (timeToLiveRemaining <= 0)
         {
-            isDead = true;
-
-            //stop
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            //drop
-            //FlattenMe();
-
-            //and die
-            var renderer = GetComponent<Renderer>();
-            renderer.material.SetColor("_Color", Color.black);
-
-            CancelInvoke("Agify");  //stop aging
-
-            mainManager.OnDeath(this);  //let manager know
+            OnDeath();
         } else
         {
             LifeTic();
         }
     }
 
-    private void FlattenMe()
+    //called when something attacks
+    public void OnDeath()
     {
+        isDead = true;
+        storedEnergy = 0;
+
+        //stop
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        //drop
         //TODO: animate the drop, replace mesh and collider with cylinder
-        //NOTE: not working for now
-        float amount = 4;
-        transform.position += Vector3.down * amount / 2; // Move the object in the direction of scaling, so that the corner on ther side stays in place
-        transform.localScale += Vector3.down * amount; // Scale object in the specified direction
+
+        //and die
+        var renderer = GetComponent<Renderer>();
+        renderer.material.SetColor("_Color", Color.black);
+
+        CancelInvoke("Agify");  //stop aging
+
+        mainManager.OnEntityDeath(this);  //let manager know
+
+        Invoke("Decay", DataManager.Instance.corpseDecaySeconds);
     }
 
-    protected GameObject FindClosestByTag(string targetTag)
+    private void Decay()
+    {
+        //TODO: spawn some Fungus?
+        Destroy(gameObject);
+    }
+
+    protected void BurnEnergy(float amount)
+    {
+        storedEnergy -= amount;
+        if (storedEnergy <= 0)
+        {
+            storedEnergy = 0;
+            OnDeath();  //ran out of energy
+        }
+    }
+
+    protected GameObject FindClosestByTag(string targetTag, bool live = true)
     {
         GameObject[] gos;
         gos = GameObject.FindGameObjectsWithTag(targetTag);
@@ -72,6 +100,12 @@ public abstract class Entity : MonoBehaviour
         Vector3 position = transform.position;
         foreach (GameObject go in gos)
         {
+            if (live) {
+                //if live is required, skip all the corpses
+                var entity = go.GetComponent<Entity>();
+                if (entity != null && entity.isDead) continue;
+            }
+
             Vector3 diff = go.transform.position - position;
             float curDistance = diff.sqrMagnitude;
             if (curDistance < distance)
@@ -83,20 +117,31 @@ public abstract class Entity : MonoBehaviour
         return closest;
     }
 
-    // override in child class
-
-    //runs every second, use in child classes to make decisions about current actions and mode of existance
-    protected abstract void LifeTic();
+    public void PunchUp()
+    {
+    }
 
     protected virtual void Consume(Entity target)
     {
+        storedEnergy += (target.storedEnergy / 2);  //transfer half of target's energy to self
+        timeToLiveRemaining += DataManager.Instance.lifeClockBonusForFeeding;  //add bonus time
+        target.OnDeath();  //kill target
     }
 
-    protected virtual void Reproduce()
+    protected virtual void TryReproduce(Entity target)
     {
+        
+        if (storedEnergy >= 100 && target.storedEnergy >= 100 && Random.Range(0f, 1f) < proliferationRate)
+        {
+            //ask manager to spawn another of same type
+            BurnEnergy(50);
+            mainManager.SpawnOne(gameObject, false);
+        } else
+        {
+            BurnEnergy(storedEnergy * 0.01f);  //1% for the attempt
+        }
     }
 
-    protected virtual void Chase(GameObject towardTarget)
-    {
-    }
+    //runs every second, use in child classes to make decisions about current actions and mode of existance
+    protected abstract void LifeTic();
 }
