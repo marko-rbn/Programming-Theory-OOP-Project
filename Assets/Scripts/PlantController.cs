@@ -17,7 +17,7 @@ public class PlantController : Entity
         //make decisions and live!
 
         //increase energy (photosynthesis?)
-        storedEnergy += DataManager.Instance.plantEnergyIncreasePerLifeTic;
+        AdjustEnergy(DataManager.Instance.plantEnergyIncreasePerLifeTic);
 
         //what does a plant decide??
         TryReproduce();

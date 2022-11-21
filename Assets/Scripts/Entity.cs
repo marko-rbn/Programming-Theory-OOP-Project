@@ -92,15 +92,22 @@ public abstract class Entity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //TODO: rename to AdjustEnergy(), use energy level to resize the entity
-    protected void BurnEnergy(float amount)
+    //TODO: use energy level to resize the entity
+    protected void AdjustEnergy(float amount)
     {
-        storedEnergy -= amount;
+        storedEnergy += amount;
+        UpdateEntitySize();
         if (storedEnergy <= 0)
         {
             storedEnergy = 0;
             OnDeath();  //ran out of energy
         }
+    }
+
+    protected virtual void UpdateEntitySize()
+    {
+        //override in child classes to adjust size based on energy stored and type of entity
+        //by default no change
     }
 
     protected GameObject FindClosestByTag(string targetTag, bool live = true)
@@ -131,7 +138,7 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Consume(Entity target)
     {
-        storedEnergy += (target.storedEnergy / 2);  //transfer half of target's energy to self
+        AdjustEnergy(target.storedEnergy / 2);  //transfer half of target's energy to self
         timeToLiveRemaining += DataManager.Instance.lifeClockBonusForFeeding;  //add bonus time
         target.OnDeath();  //kill target
     }
@@ -144,7 +151,7 @@ public abstract class Entity : MonoBehaviour
         if (storedEnergy >= 100 && successByChance)
         {
             //ask manager to spawn another of same type
-            BurnEnergy(50);
+            AdjustEnergy(-50);
             mainManager.SpawnOne(gameObject, false);
         }
     }
@@ -157,11 +164,11 @@ public abstract class Entity : MonoBehaviour
         if (storedEnergy >= 100 && target.storedEnergy >= 100 && successByChance)
         {
             //ask manager to spawn another of same type
-            BurnEnergy(50);
+            AdjustEnergy(-50);
             mainManager.SpawnOne(gameObject, false);
         } else
         {
-            BurnEnergy(storedEnergy * 0.01f);  //1% for the attempt
+            AdjustEnergy(-storedEnergy * 0.01f);  //1% for the attempt
         }
     }
 

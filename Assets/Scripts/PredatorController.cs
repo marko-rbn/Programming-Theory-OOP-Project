@@ -5,6 +5,7 @@ using UnityEngine;
 public class PredatorController : Entity
 {
     private float predatorForceMultiplier = 100;
+    private float baseSize = 10;
 
     // Start is called before the first frame update
     void Start()
@@ -12,6 +13,7 @@ public class PredatorController : Entity
         timeToLiveRemaining = DataManager.Instance.settings.Predator_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Predator_ProliferationRate;
         PopUpSelf();
+        UpdateEntitySize();
     }
 
     protected override void LifeTic()
@@ -23,7 +25,19 @@ public class PredatorController : Entity
         if (target != null)
         {
             rb.AddForce((target.transform.position - transform.position).normalized * predatorForceMultiplier);  //move toward
-            BurnEnergy(0.1f);
+            AdjustEnergy(-0.1f);
+        }
+    }
+
+    //called after energy change
+    protected override void UpdateEntitySize()
+    {
+        float adjustedSize = baseSize + storedEnergy * 0.05f;
+        transform.localScale = Vector3.one * adjustedSize;
+        float minHeight = adjustedSize / 2;
+        if (transform.position.y < minHeight)
+        {
+            transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
         }
     }
 

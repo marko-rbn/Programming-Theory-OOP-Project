@@ -5,6 +5,7 @@ using UnityEngine;
 public class PreyController : Entity
 {
     private float preyForceMultiplier = 100;
+    private float baseSize = 8;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +24,19 @@ public class PreyController : Entity
         if (target != null)
         {
             rb.AddForce((transform.position - target.transform.position).normalized * preyForceMultiplier);  //move away
-            BurnEnergy(0.1f);
+            AdjustEnergy(-0.1f);
+        }
+    }
+
+    //called after energy change
+    protected override void UpdateEntitySize()
+    {
+        float adjustedSize = baseSize + storedEnergy * 0.05f;
+        transform.localScale = Vector3.one * adjustedSize;
+        float minHeight = adjustedSize / 2;
+        if (transform.position.y < minHeight)
+        {
+            transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
         }
     }
 
@@ -48,7 +61,7 @@ public class PreyController : Entity
             else if (target.CompareTag("Prey"))
             {
                 TryReproduce(entity);
-                BurnEnergy(storedEnergy * 0.01f);
+                AdjustEnergy(-storedEnergy * 0.01f);
             }
         }
     }
