@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,14 +11,18 @@ public class MainManager : MonoBehaviour
     public GameObject plantPrefab;
     public GameObject fungusPrefab;
 
+    public GameObject infoPanel;
+    public List<TextMeshProUGUI> infoPanelText;
+
     private GameObject entityContainer;
+    public Entity selectedEntity { get; private set; }
 
     private void Awake()
     {
-        entityContainer = GameObject.Find("Entity Container");     
+        entityContainer = GameObject.Find("Entity Container");
+        infoPanel.SetActive(false);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         if (DataManager.Instance == null)
@@ -34,11 +39,31 @@ public class MainManager : MonoBehaviour
         SpawnAllEntitiesOfType(predatorPrefab);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        //TODO: handle click on Entity to select as target for info display panel
-        //TODO: and follow Entity with camera
+        //TODO: follow selected Entity with camera?
+        if (selectedEntity != null)
+        {
+            UpdateInfoDisplay();
+        }
+    }
+
+    public void SelectEntity(Entity target)
+    {
+        if (selectedEntity != null)
+        {
+            selectedEntity.Deselect();
+        }
+        selectedEntity = target;
+        infoPanel.SetActive((target != null));
+    }
+
+    private void UpdateInfoDisplay()
+    {
+        infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
+        infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
+        infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
+        infoPanelText[3].SetText(selectedEntity.actionMode);  //action mode
     }
 
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)

@@ -4,22 +4,19 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    [SerializeField]
     public bool isDead { get; protected set; }
-    [SerializeField]
     public bool isActive { get; protected set; }
-    [SerializeField]
+    public bool isSelected { get; protected set; }
     public float storedEnergy { get; protected set; }  //spend energy to move and reproduce, gain energy from food or photosynthesis
+    public string actionMode { get; protected set; }
+    public int timeToLiveRemaining { get; protected set; }  //in seconds
 
-    [SerializeField]
-    protected int timeToLiveRemaining;  //in seconds
-    [SerializeField]
     protected float proliferationRate;  //between 0 and 1
 
     protected Rigidbody rb;
     private MainManager mainManager;
 
-    //don't override Awake
+    //don't override Awake in children
     private void Awake()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
@@ -27,6 +24,7 @@ public abstract class Entity : MonoBehaviour
         isDead = false;
         isActive = false;
         storedEnergy = DataManager.Instance.initialEntityEnergy;
+        actionMode = "TBD";  //TODO: store higher level mode of operation: chasing, resting, reproducing, etc.
         InvokeRepeating("Agify", 1, 1);
     }
 
@@ -87,8 +85,32 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    private void OnMouseDown()
+    {
+        //left click to select, click again to deselect
+        if (isSelected)
+        {
+            mainManager.SelectEntity(null);  //Deselect() is called from mainManager
+        } else
+        {
+            mainManager.SelectEntity(this);
+            isSelected = true;
+            //TODO: enable mark
+        }
+    }
+
+    public void Deselect()
+    {
+        isSelected = false;
+        //TODO: disable mark
+    }
+
     private void Decay()
     {
+        if (isSelected)
+        {
+            mainManager.SelectEntity(null);  //deselect before destroyed
+        }
         Destroy(gameObject);
     }
 
