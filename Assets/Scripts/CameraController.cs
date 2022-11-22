@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     private float minCameraHeight = 50;
     private float maxCameraDownAngle = 60;
     private float minCameraDownAngle = 25;
+    private float cameraClampRange = 600;
 
     private Rigidbody rb;
     private GameObject cameraReference;
@@ -29,17 +30,14 @@ public class CameraController : MonoBehaviour
     void FixedUpdate()
     {
         //initialize vectors to zero
-        Vector3 motionPlanar = Vector3.zero;  //no forward motion
-        Vector3 motionUp = Vector3.zero;  //no vertical motion
-        Vector3 angularVelocity = Vector3.zero;  //no rotation
-
-        //TODO: constrain camera container location
+        Vector3 motionPlanar = Vector3.zero;
+        Vector3 motionUp = Vector3.zero;
+        Vector3 angularVelocity = Vector3.zero;
 
         if (mainManager.selectedEntity == null)
         {
             //move camera container laterally using keyboard
             motionPlanar = transform.forward * Input.GetAxisRaw("Vertical") * movementSpeed;
-
             //rotate using keyboard
             angularVelocity = new Vector3(0, Input.GetAxis("Horizontal") * rotationSpeed, 0);
         } else
@@ -69,7 +67,9 @@ public class CameraController : MonoBehaviour
         {
             motionUp = transform.up * (-movementSpeed);
         }
-        rb.MovePosition(transform.position + motionPlanar + motionUp);
+        Vector3 plannedPosition = transform.position + motionPlanar + motionUp;
+        ConstrainXZToRange(ref plannedPosition, cameraClampRange);
+        rb.MovePosition(plannedPosition);
 
         //if camera container moved vertically, adjust downward angle of the camera itself
         if (motionUp != Vector3.zero)
@@ -85,4 +85,11 @@ public class CameraController : MonoBehaviour
             rb.MoveRotation(rb.rotation * deltaRotation);
         }
     }
+
+    private void ConstrainXZToRange(ref Vector3 pos, float maxRange)
+    {
+        pos.x = Mathf.Clamp(pos.x, -maxRange, maxRange);
+        pos.z = Mathf.Clamp(pos.z, -maxRange, maxRange);
+    }
+
 }

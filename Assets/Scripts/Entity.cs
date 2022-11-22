@@ -95,14 +95,12 @@ public abstract class Entity : MonoBehaviour
         {
             mainManager.SelectEntity(this);
             isSelected = true;
-            //TODO: enable mark
         }
     }
 
     public void Deselect()
     {
         isSelected = false;
-        //TODO: disable mark
     }
 
     private void Decay()
@@ -114,7 +112,6 @@ public abstract class Entity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //TODO: use energy level to resize the entity
     protected void AdjustEnergy(float amount)
     {
         storedEnergy += amount;
@@ -129,9 +126,9 @@ public abstract class Entity : MonoBehaviour
     protected virtual void UpdateEntitySize()
     {
         //override in child classes to adjust size based on energy stored and type of entity
-        //by default no change
     }
 
+    //TODO: limit to sensoryRange?
     protected GameObject FindClosestByTag(string targetTag, bool live = true)
     {
         GameObject[] gos;
@@ -185,9 +182,11 @@ public abstract class Entity : MonoBehaviour
         bool successByChance =  Random.Range(0f, 1f) < proliferationRate;
         if (storedEnergy >= 100 && target.storedEnergy >= 100 && successByChance)
         {
-            //ask manager to spawn another of same type
-            AdjustEnergy(-50);
-            mainManager.SpawnOne(gameObject, false);
+            //ask manager to spawn another of same type - main manager may refuse if there are too many
+            if (mainManager.SpawnOne(gameObject, false))
+            {
+                AdjustEnergy(-50);
+            }
         } else
         {
             AdjustEnergy(-storedEnergy * 0.01f);  //1% for the attempt

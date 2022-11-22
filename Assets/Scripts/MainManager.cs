@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,8 @@ public class MainManager : MonoBehaviour
     public GameObject plantPrefab;
     public GameObject fungusPrefab;
 
+    public int entityCountLimit = 500;
+
     public Entity selectedEntity { get; private set; }
     public GameObject infoPanel;
     public List<TextMeshProUGUI> infoPanelText;
@@ -19,6 +22,7 @@ public class MainManager : MonoBehaviour
     private MarkerFollowSelected marker;
 
     private GameObject entityContainer;  //parent object for containing all spawns
+    public Dictionary<string, int> entityCounts = new();
 
     private void Awake()
     {
@@ -37,9 +41,16 @@ public class MainManager : MonoBehaviour
         }
 
         //spawn everything according to population size settings
+        entityCounts.Add(fungusPrefab.tag, 0);
         SpawnAllEntitiesOfType(fungusPrefab);
+
+        entityCounts.Add(plantPrefab.tag, 0);
         SpawnAllEntitiesOfType(plantPrefab);
+
+        entityCounts.Add(preyPrefab.tag, 0);
         SpawnAllEntitiesOfType(preyPrefab);
+
+        entityCounts.Add(predatorPrefab.tag, 0);
         SpawnAllEntitiesOfType(predatorPrefab);
     }
 
@@ -69,6 +80,7 @@ public class MainManager : MonoBehaviour
         infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
         infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
         infoPanelText[3].SetText(selectedEntity.actionMode);  //action mode
+        //TODO: add total entity type count to panel
     }
 
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)
@@ -80,8 +92,13 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    public void SpawnOne(GameObject entityPrefab, bool randomLoc = true)
+    public bool SpawnOne(GameObject entityPrefab, bool randomLoc = true)
     {
+        //refuse if too many
+        if (entityCounts[entityPrefab.tag] >= entityCountLimit) {
+            return false;
+        }
+
         int x = (int)entityPrefab.gameObject.transform.position.x;
         int z = (int)entityPrefab.gameObject.transform.position.z;
         if (randomLoc)
@@ -93,6 +110,9 @@ public class MainManager : MonoBehaviour
         }
         GameObject newEntity = Instantiate(entityPrefab, entityContainer.transform);
         newEntity.transform.position = new Vector3(x, 15, z);
+
+        entityCounts[newEntity.tag]++;
+        return true;
     }
 
     public void OnEntityDeath(Entity corpse)
