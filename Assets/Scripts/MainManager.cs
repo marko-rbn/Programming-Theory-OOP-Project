@@ -11,15 +11,19 @@ public class MainManager : MonoBehaviour
     public GameObject plantPrefab;
     public GameObject fungusPrefab;
 
+    public Entity selectedEntity { get; private set; }
     public GameObject infoPanel;
     public List<TextMeshProUGUI> infoPanelText;
 
-    private GameObject entityContainer;
-    public Entity selectedEntity { get; private set; }
+    public GameObject markerObject;
+    private MarkerFollowSelected marker;
+
+    private GameObject entityContainer;  //parent object for containing all spawns
 
     private void Awake()
     {
         entityContainer = GameObject.Find("Entity Container");
+        marker = markerObject.GetComponent<MarkerFollowSelected>();
         infoPanel.SetActive(false);
     }
 
@@ -41,7 +45,6 @@ public class MainManager : MonoBehaviour
 
     void Update()
     {
-        //TODO: follow selected Entity with camera?
         if (selectedEntity != null)
         {
             UpdateInfoDisplay();
@@ -54,6 +57,8 @@ public class MainManager : MonoBehaviour
         {
             selectedEntity.Deselect();
         }
+        marker.target = (target == null) ? null : target.gameObject;
+        markerObject.SetActive(target != null);
         selectedEntity = target;
         infoPanel.SetActive((target != null));
     }
