@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FungusController : Entity
 {
-    // Start is called before the first frame update
+    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Fungus_MaxLifespan;
@@ -12,13 +12,14 @@ public class FungusController : Entity
         PopUpSelf(5f);
     }
 
+    //make decisions and live!
+    //TODO: reproduce when near corpses
     protected override void LifeTic()
     {
-        //TODO: make decisions and live!
-        //what does a fungus decide??
+        
     }
 
-    //handle Predator/Prey corpse interactions
+    //handle Entity interactions
     private void OnCollisionEnter(Collision collision)
     {
         GameObject target = collision.collider.gameObject;
@@ -33,7 +34,6 @@ public class FungusController : Entity
             var entity = collision.collider.GetComponent<Entity>();
             if ((target.CompareTag("Predator") || target.CompareTag("Prey")) && entity.isDead)
             {
-                //eat it! - if corpse
                 Consume(entity);
             }
         }

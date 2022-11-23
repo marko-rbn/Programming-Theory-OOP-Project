@@ -15,6 +15,7 @@ public class DataManager : MonoBehaviour
     public int initialSpawnRange = 480;
     public float plantEnergyIncreasePerLifeTic = 2;
     public float plantDispersalAngle = 10f;
+    public float sensoryRange = 100;
 
     public static DataManager Instance;
 

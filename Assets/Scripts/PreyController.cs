@@ -4,43 +4,33 @@ using UnityEngine;
 
 public class PreyController : Entity
 {
-    private float preyForceMultiplier = 100;
-    private float baseSize = 8;
+    private float preyForceMultiplier = 300;
 
-    // Start is called before the first frame update
+    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Prey_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Prey_ProliferationRate;
+        corpseDecaySeconds = DataManager.Instance.corpseDecaySeconds;
+        resizingEntity = true;
+        baseSize = 8;
         PopUpSelf();
     }
 
+    //make decisions and live!
+    //TODO: avoid Predators, seek Plants, roam around when not in range, seek mate when plenty of energy
     protected override void LifeTic()
     {
-        //make decisions and live!
-
         //find closest Predator and move away from it
-        GameObject target = FindClosestByTag("Predator");
+        GameObject target = FindClosestByTag("Predator", DataManager.Instance.sensoryRange);
         if (target != null)
         {
-            rb.AddForce((transform.position - target.transform.position).normalized * preyForceMultiplier);  //move away
+            AvoidTarget(target, preyForceMultiplier);
             AdjustEnergy(-0.1f);
         }
     }
 
-    //called after energy change
-    protected override void UpdateEntitySize()
-    {
-        float adjustedSize = baseSize + storedEnergy * 0.05f;
-        transform.localScale = Vector3.one * adjustedSize;
-        float minHeight = adjustedSize / 2;
-        if (transform.position.y < minHeight)
-        {
-            transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
-        }
-    }
-
-    //handle Prey and Plant interaction
+    //handle Entity interactions
     private void OnCollisionEnter(Collision collision)
     {
         GameObject target = collision.collider.gameObject;
@@ -53,15 +43,13 @@ public class PreyController : Entity
         if (isActive && !isDead)
         {
             var entity = collision.collider.GetComponent<Entity>();
-            if (target.CompareTag("Plant"))
+            if (target.CompareTag("Plant") && !entity.isDead)
             {
-                //eat it!
                 Consume(entity);
             }
-            else if (target.CompareTag("Prey"))
+            else if (target.CompareTag("Prey") && !entity.isDead)
             {
                 TryReproduce(entity);
-                AdjustEnergy(-storedEnergy * 0.01f);
             }
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlantController : Entity
 {
-    // Start is called before the first frame update
+    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Plant_MaxLifespan;
@@ -12,18 +12,15 @@ public class PlantController : Entity
         PopUpSelf(10f);
     }
 
+    //make decisions and live!
+    //gain energy (photosynthesis) and reproduce
     protected override void LifeTic()
     {
-        //make decisions and live!
-
-        //increase energy (photosynthesis?)
         AdjustEnergy(DataManager.Instance.plantEnergyIncreasePerLifeTic);
-
-        //what does a plant decide??
         TryReproduce();
     }
 
-    //handle Fungus interaction
+    //handle Entity interactions
     private void OnCollisionEnter(Collision collision)
     {
         GameObject target = collision.collider.gameObject;
@@ -38,7 +35,6 @@ public class PlantController : Entity
             var entity = collision.collider.GetComponent<Entity>();
             if (target.CompareTag("Fungus"))
             {
-                //eat it!
                 Consume(entity);
             }
         }

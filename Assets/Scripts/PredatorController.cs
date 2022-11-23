@@ -4,44 +4,34 @@ using UnityEngine;
 
 public class PredatorController : Entity
 {
-    private float predatorForceMultiplier = 100;
-    private float baseSize = 10;
+    private float predatorForceMultiplier = 300;
 
-    // Start is called before the first frame update
+    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Predator_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Predator_ProliferationRate;
+        corpseDecaySeconds = DataManager.Instance.corpseDecaySeconds;
+        resizingEntity = true;
+        baseSize = 10;
         PopUpSelf();
         UpdateEntitySize();
     }
 
+    //make decisions and live!
+    //TODO: follow and kill Prey, roam around when not in range, seek mate when plenty of energy
     protected override void LifeTic()
     {
-        //make decisions and live!
-
         //find closest Prey and move to it
-        GameObject target = FindClosestByTag("Prey");
-        if (target != null)
+        GameObject target = FindClosestByTag("Prey", DataManager.Instance.sensoryRange);
+        if (target != null && isActive)
         {
-            rb.AddForce((target.transform.position - transform.position).normalized * predatorForceMultiplier);  //move toward
+            InterceptTarget(target, predatorForceMultiplier);
             AdjustEnergy(-0.1f);
         }
     }
 
-    //called after energy change
-    protected override void UpdateEntitySize()
-    {
-        float adjustedSize = baseSize + storedEnergy * 0.05f;
-        transform.localScale = Vector3.one * adjustedSize;
-        float minHeight = adjustedSize / 2;
-        if (transform.position.y < minHeight)
-        {
-            transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
-        }
-    }
-
-    //handle Predator and Prey interactions
+    //handle Entity interactions
     private void OnCollisionEnter(Collision collision)
     {
         GameObject target = collision.collider.gameObject;
@@ -56,12 +46,10 @@ public class PredatorController : Entity
             var entity = collision.collider.GetComponent<Entity>();
             if (target.CompareTag("Prey") && !entity.isDead)
             {
-                //consume prey, if it's alive - gain energy
                 Consume(entity);
             }
             else if (target.CompareTag("Predator") && !entity.isDead)
             {
-                //fight another predator if alive - subtract 1% energy from each
                 TryReproduce(entity);
             }
         }

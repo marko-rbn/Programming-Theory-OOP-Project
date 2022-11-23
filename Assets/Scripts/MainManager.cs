@@ -17,12 +17,13 @@ public class MainManager : MonoBehaviour
     public Entity selectedEntity { get; private set; }
     public GameObject infoPanel;
     public List<TextMeshProUGUI> infoPanelText;
+    public TextMeshProUGUI topText;
 
     public GameObject markerObject;
     private MarkerFollowSelected marker;
 
     private GameObject entityContainer;  //parent object for containing all spawns
-    public Dictionary<string, int> entityCounts = new();
+    public Dictionary<string, int> entityCounts = new();  //count updated only in SpawnOne() and AfterEntityDecay()
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class MainManager : MonoBehaviour
         infoPanel.SetActive(false);
     }
 
+    //spawn initial populations
     void Start()
     {
         if (DataManager.Instance == null)
@@ -54,12 +56,29 @@ public class MainManager : MonoBehaviour
         SpawnAllEntitiesOfType(predatorPrefab);
     }
 
+    //text updates
     void Update()
     {
+        List<string> ss = new();
+        foreach (var kv in entityCounts)
+        {
+            ss.Add(kv.Key + ": " + kv.Value);
+        }
+        topText.SetText(string.Join("\t\t", ss));
+
         if (selectedEntity != null)
         {
             UpdateInfoDisplay();
         }
+    }
+
+    private void UpdateInfoDisplay()
+    {
+        infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
+        infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
+        infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
+        infoPanelText[3].SetText(selectedEntity.actionMode);  //action mode
+        infoPanelText[4].SetText("reserved");
     }
 
     public void SelectEntity(Entity target)
@@ -72,15 +91,6 @@ public class MainManager : MonoBehaviour
         markerObject.SetActive(target != null);
         selectedEntity = target;
         infoPanel.SetActive((target != null));
-    }
-
-    private void UpdateInfoDisplay()
-    {
-        infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
-        infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
-        infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
-        infoPanelText[3].SetText(selectedEntity.actionMode);  //action mode
-        //TODO: add total entity type count to panel
     }
 
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)
@@ -115,9 +125,14 @@ public class MainManager : MonoBehaviour
         return true;
     }
 
-    public void OnEntityDeath(Entity corpse)
+    public void AfterEntityDeath(Entity corpse)
     {
-        //spawn Fungus
+        //spawn a Fungus
         SpawnOne(fungusPrefab);
+    }
+
+    public void AfterEntityDecay(string entityTag)
+    {
+        entityCounts[entityTag]--;
     }
 }
