@@ -10,6 +10,7 @@ public class PlantController : Entity
         timeToLiveRemaining = DataManager.Instance.settings.Plant_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Plant_ProliferationRate;
         PopUpSelf(10f);
+        actionMode = "photosynthesis";
     }
 
     //make decisions and live!

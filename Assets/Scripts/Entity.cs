@@ -8,16 +8,20 @@ public abstract class Entity : MonoBehaviour
     public bool isActive { get; protected set; }
     public bool isSelected { get; protected set; }
     public float storedEnergy { get; protected set; }  //spend energy to move and reproduce, gain energy from food or photosynthesis
-    public string actionMode { get; protected set; }
     public int timeToLiveRemaining { get; protected set; }  //in seconds
+
+    public string actionMode { get; protected set; }  //e.g.: hunt, roam, seek mate, etc.
+    public float actionModeStarted { get; protected set; }  //start when current action mode started (in seconds since application start)
+    protected GameObject actionTarget;  //actionMode specific target
 
     protected float proliferationRate;  //between 0 and 1
     protected int corpseDecaySeconds = 0;  //each child should set if non-zero
     protected bool resizingEntity = false;
     protected float baseSize;  //set in all children
 
+
     protected Rigidbody rb;
-    private MainManager mainManager;
+    protected MainManager mainManager;
 
     //don't override Awake in children
     private void Awake()
@@ -27,7 +31,6 @@ public abstract class Entity : MonoBehaviour
         isDead = false;
         isActive = false;
         storedEnergy = DataManager.Instance.initialEntityEnergy;
-        actionMode = "TBD";  //TODO: store higher level mode of operation: chasing, resting, reproducing, etc.
         InvokeRepeating("Agify", 1, 1);
     }
 
@@ -46,6 +49,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     //called after energy change
+    //TODO: if isSelected adjust marker size
     protected void UpdateEntitySize()
     {
         float adjustedSize = baseSize + storedEnergy * 0.05f;
@@ -70,15 +74,29 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    protected void SwitchMode(string newActionMode)
+    {
+        if (actionMode != newActionMode)
+        {
+            //different mode - reset timer
+            actionModeStarted = Time.realtimeSinceStartup;
+        }
+        actionMode = newActionMode;
+        actionTarget = null;
+        //call LifeTic again, to initiate new Mode as soon as possible
+        LifeTic();
+    }
+
     //called when something attacks
     public void TriggerDeath()
     {
         if (isDead) return;  //can only die once ;)
 
         isDead = true;
-        storedEnergy = 0;
+        //storedEnergy = 0;
 
         StopMoving();
+        SwitchMode("dead");
 
         //and die
         var renderer = GetComponent<Renderer>();
@@ -136,7 +154,7 @@ public abstract class Entity : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    //TODO: combine InterceptTarget and AvoidTarget so a single direction can be calculated for both
+    //TODO: combine InterceptTarget and EvadeTarget so a single direction can be calculated for both
     protected void InterceptTarget(GameObject target, float forceMultiplier)
     {
         //TODO: intercept direction?
@@ -146,7 +164,7 @@ public abstract class Entity : MonoBehaviour
         rb.AddForce(direction * forceMultiplier);  //move toward
     }
 
-    protected void AvoidTarget(GameObject target, float forceMultiplier)
+    protected void EvadeTarget(GameObject target, float forceMultiplier)
     {
         Vector3 direction = (transform.position - target.transform.position);
         direction.y = 0;  //eliminate vertical component
@@ -154,45 +172,62 @@ public abstract class Entity : MonoBehaviour
         rb.AddForce(direction * forceMultiplier);  //move toward
     }
 
-    protected GameObject FindClosestByTag(string targetTag, float maxRange, bool live = true)
+    protected void RandomRoam(float forceMultiplier)
+    {
+        Vector3 direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+        //direction.y = 0;  //eliminate vertical component
+        direction = direction.normalized;
+        rb.AddForce(direction * forceMultiplier);  //move toward
+    }
+
+    protected GameObject FindClosestByTag(string targetTag, float maxRange, bool live = true, string actionModeFilter = null)
     {
         GameObject[] gos;
         gos = GameObject.FindGameObjectsWithTag(targetTag);
         GameObject closest = null;
-        float distance = Mathf.Infinity;
+        float distanceSqr = Mathf.Infinity;
         Vector3 position = transform.position;
         float maxRangeSqr = maxRange * maxRange;
         foreach (GameObject go in gos)
         {
-            if (live) {
-                //if live is required, skip all the corpses
-                var entity = go.GetComponent<Entity>();
-                if (entity != null && entity.isDead) continue;
-            }
+            //skip self
+            if (go == gameObject) continue;
 
+            var entity = go.GetComponent<Entity>();
+            //live filter
+            if (live && entity != null && entity.isDead) continue;
+            //actionMode filter
+            if (actionModeFilter != null && entity.actionMode != actionModeFilter) continue;
+
+            //check distance
             Vector3 diff = go.transform.position - position;
             float curDistanceSqr = diff.sqrMagnitude;
 
-            if (curDistanceSqr > maxRangeSqr)
-            {
-                //outside of sensory range, ignore this one
-                continue;
-            }
+            //out of range - skip
+            if (curDistanceSqr > maxRangeSqr) continue;
 
-            if (curDistanceSqr < distance)
+            //find closest
+            if (curDistanceSqr < distanceSqr)
             {
                 closest = go;
-                distance = curDistanceSqr;
+                distanceSqr = curDistanceSqr;
             }
         }
         return closest;
     }
 
+    protected float DistanceToTarget(GameObject target)
+    {
+        Vector3 v = target.transform.position - transform.position;
+        return v.magnitude;
+    }
+
     protected virtual void Consume(Entity target)
     {
-        AdjustEnergy(target.storedEnergy / 2);  //transfer half of target's energy to self
+        AdjustEnergy(target.storedEnergy * 0.6f);  //transfer half of target's energy to self
+        target.storedEnergy *= 0.4f;  //NOTE: will limit how much Fungus can drain from corpses
         timeToLiveRemaining += DataManager.Instance.lifeClockBonusForFeeding;  //add bonus time
-        target.TriggerDeath();  //kill target
+        target.TriggerDeath();  //kill target, if still alive
     }
 
     //Polymorphism ;)

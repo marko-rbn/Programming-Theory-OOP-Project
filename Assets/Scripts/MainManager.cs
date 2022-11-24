@@ -57,6 +57,7 @@ public class MainManager : MonoBehaviour
     }
 
     //text updates
+    //TODO: add end-simulation condition when one entity type is extinct
     void Update()
     {
         List<string> ss = new();
@@ -77,7 +78,7 @@ public class MainManager : MonoBehaviour
         infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
         infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
         infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
-        infoPanelText[3].SetText(selectedEntity.actionMode);  //action mode
+        infoPanelText[3].SetText(selectedEntity.actionMode + " (" + Mathf.FloorToInt(Time.realtimeSinceStartup - selectedEntity.actionModeStarted) + ")");  //action mode
         infoPanelText[4].SetText("reserved");
     }
 
@@ -87,9 +88,16 @@ public class MainManager : MonoBehaviour
         {
             selectedEntity.Deselect();
         }
+        selectedEntity = target;
+
         marker.target = (target == null) ? null : target.gameObject;
         markerObject.SetActive(target != null);
-        selectedEntity = target;
+        if (target != null)
+        {
+            //scale marker to target
+            markerObject.transform.localScale = target.transform.localScale * 0.15f;
+        }
+
         infoPanel.SetActive((target != null));
     }
 

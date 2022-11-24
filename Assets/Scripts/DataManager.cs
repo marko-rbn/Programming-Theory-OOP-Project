@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class DataManager : MonoBehaviour
 {
     public float initialEntityEnergy = 75;
-    public int corpseDecaySeconds = 10;
+    public int corpseDecaySeconds = 5;
     public int lifeClockBonusForFeeding = 5;
     public int initialSpawnRange = 480;
     public float plantEnergyIncreasePerLifeTic = 2;

@@ -10,13 +10,22 @@ public class FungusController : Entity
         timeToLiveRemaining = DataManager.Instance.settings.Fungus_MaxLifespan;
         proliferationRate = DataManager.Instance.settings.Fungus_ProliferationRate;
         PopUpSelf(5f);
+        actionMode = "eat-corpse";
     }
 
     //make decisions and live!
-    //TODO: reproduce when near corpses
     protected override void LifeTic()
     {
-        
+        GameObject corpse = FindClosestByTag("Predator", 50, false, "dead");
+        if (corpse == null) 
+        {
+            corpse = FindClosestByTag("Prey", 50, false, "dead");
+        }
+        if (corpse != null)
+        {
+            Consume(corpse.GetComponent<Entity>());
+            TryReproduce();
+        }
     }
 
     //handle Entity interactions
@@ -31,6 +40,7 @@ public class FungusController : Entity
 
         if (isActive && !isDead)
         {
+            //Predator or Prey corpse touches
             var entity = collision.collider.GetComponent<Entity>();
             if ((target.CompareTag("Predator") || target.CompareTag("Prey")) && entity.isDead)
             {
