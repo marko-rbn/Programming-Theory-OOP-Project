@@ -12,13 +12,12 @@ public abstract class Entity : MonoBehaviour
 
     public string actionMode { get; protected set; }  //e.g.: hunt, roam, seek mate, etc.
     public float actionModeStarted { get; protected set; }  //start when current action mode started (in seconds since application start)
-    protected GameObject actionTarget;  //actionMode specific target
+    public GameObject actionTarget { get; protected set; }  //actionMode specific target
 
     protected float proliferationRate;  //between 0 and 1
     protected int corpseDecaySeconds = 0;  //each child should set if non-zero
     protected bool resizingEntity = false;
     protected float baseSize;  //set in all children
-
 
     protected Rigidbody rb;
     protected MainManager mainManager;
@@ -28,6 +27,7 @@ public abstract class Entity : MonoBehaviour
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         rb = GetComponent<Rigidbody>();
+
         isDead = false;
         isActive = false;
         storedEnergy = DataManager.Instance.initialEntityEnergy;
@@ -49,7 +49,6 @@ public abstract class Entity : MonoBehaviour
     }
 
     //called after energy change
-    //TODO: if isSelected adjust marker size
     protected void UpdateEntitySize()
     {
         float adjustedSize = baseSize + storedEnergy * 0.05f;
@@ -58,6 +57,11 @@ public abstract class Entity : MonoBehaviour
         if (transform.position.y < minHeight)
         {
             transform.position = new Vector3(transform.position.x, minHeight, transform.position.z);
+        }
+        if (isSelected)
+        {
+            //adjust marker size
+            mainManager.marker1Object.transform.localScale = transform.localScale * 0.15f;
         }
     }
 
@@ -82,7 +86,7 @@ public abstract class Entity : MonoBehaviour
             actionModeStarted = Time.realtimeSinceStartup;
         }
         actionMode = newActionMode;
-        actionTarget = null;
+        SetActionTarget(null);
         //call LifeTic again, to initiate new Mode as soon as possible
         LifeTic();
     }
@@ -115,6 +119,7 @@ public abstract class Entity : MonoBehaviour
         if (isSelected)
         {
             mainManager.SelectEntity(null);  //Deselect() is called from mainManager
+            mainManager.MarkTargetsTarget(null);
         } else
         {
             mainManager.SelectEntity(this);
@@ -154,14 +159,26 @@ public abstract class Entity : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
+    //only Predator entity uses this (for now)
+    protected void SetActionTarget(GameObject target)
+    {
+        actionTarget = target;
+        //only allow selected entity request that mainManager mark its target
+        if (isSelected)
+        {
+            mainManager.MarkTargetsTarget(target);
+        }
+    }
+
     //TODO: combine InterceptTarget and EvadeTarget so a single direction can be calculated for both
+    //TODO: intercept direction as sum of target vector and direction vector
     protected void InterceptTarget(GameObject target, float forceMultiplier)
     {
-        //TODO: intercept direction?
+        //direction vector to target
         Vector3 direction = (target.transform.position - transform.position);
         direction.y = 0;  //eliminate vertical component
         direction = direction.normalized;
-        rb.AddForce(direction * forceMultiplier);  //move toward
+        rb.AddForce(direction * forceMultiplier);
     }
 
     protected void EvadeTarget(GameObject target, float forceMultiplier)
@@ -169,15 +186,17 @@ public abstract class Entity : MonoBehaviour
         Vector3 direction = (transform.position - target.transform.position);
         direction.y = 0;  //eliminate vertical component
         direction = direction.normalized;
-        rb.AddForce(direction * forceMultiplier);  //move toward
+        rb.AddForce(direction * forceMultiplier);
     }
 
+    //TODO: prevent roaming too close to the edge... too many accidents
     protected void RandomRoam(float forceMultiplier)
     {
         Vector3 direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
         //direction.y = 0;  //eliminate vertical component
+        direction = rb.velocity * 0.5f + direction * 0.5f;  //retain 50% of current velocity and add 50% of random direction
         direction = direction.normalized;
-        rb.AddForce(direction * forceMultiplier);  //move toward
+        rb.AddForce(direction * forceMultiplier);
     }
 
     protected GameObject FindClosestByTag(string targetTag, float maxRange, bool live = true, string actionModeFilter = null)

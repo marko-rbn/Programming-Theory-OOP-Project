@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlantController : Entity
 {
-    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Plant_MaxLifespan;

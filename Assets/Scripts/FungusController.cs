@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FungusController : Entity
 {
-    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Fungus_MaxLifespan;

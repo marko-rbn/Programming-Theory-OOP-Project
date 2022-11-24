@@ -6,7 +6,6 @@ public class PredatorController : Entity
 {
     private float predatorForceMultiplier = 300;
 
-    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Predator_MaxLifespan;
@@ -14,6 +13,7 @@ public class PredatorController : Entity
         corpseDecaySeconds = DataManager.Instance.corpseDecaySeconds;
         resizingEntity = true;
         baseSize = 10;
+
         PopUpSelf();
         UpdateEntitySize();
     }
@@ -37,7 +37,7 @@ public class PredatorController : Entity
                     if (actionTarget == null)
                     {
                         //acquire target - closest Prey
-                        actionTarget = FindClosestByTag("Prey", DataManager.Instance.sensoryRange);
+                        SetActionTarget(FindClosestByTag("Prey", DataManager.Instance.sensoryRange));
                         if (actionTarget == null)
                         {
                             SwitchMode("roam");  //back to roam if no nearby Prey
@@ -51,7 +51,7 @@ public class PredatorController : Entity
                         if (actionTarget.GetComponent<Entity>().isDead || distance > (DataManager.Instance.sensoryRange * 2))
                         {
                             //if target dead or moved out of range (twice sensory range) - unset target
-                            actionTarget = null;
+                            SetActionTarget(null);
                         } else
                         {
                             InterceptTarget(actionTarget, predatorForceMultiplier);
@@ -71,7 +71,7 @@ public class PredatorController : Entity
                     if (actionTarget == null)
                     {
                         //acquire target - closest Predator that is also seeking mate
-                        actionTarget = FindClosestByTag("Predator", 1000, true, "seek-mate");  //increase range for seeking mate
+                        SetActionTarget(FindClosestByTag("Predator", 1000, true, "seek-mate"));  //increase range for seeking mate
                         if (actionTarget == null && secondsSinceModeChange > 10)
                         {
                             SwitchMode("roam");  //back to roam, if no nearby mates and been looking a while

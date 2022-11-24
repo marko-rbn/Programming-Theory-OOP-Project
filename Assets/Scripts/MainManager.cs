@@ -19,16 +19,20 @@ public class MainManager : MonoBehaviour
     public List<TextMeshProUGUI> infoPanelText;
     public TextMeshProUGUI topText;
 
-    public GameObject markerObject;
-    private MarkerFollowSelected marker;
+    public GameObject marker1Object;
+    private MarkerFollowSelected marker1;
+    public GameObject marker2Object;
+    protected MarkerFollowSelected marker2;
 
     private GameObject entityContainer;  //parent object for containing all spawns
     public Dictionary<string, int> entityCounts = new();  //count updated only in SpawnOne() and AfterEntityDecay()
 
+    //TODO: add Restart and BackToOptions buttons
     private void Awake()
     {
         entityContainer = GameObject.Find("Entity Container");
-        marker = markerObject.GetComponent<MarkerFollowSelected>();
+        marker1 = marker1Object.GetComponent<MarkerFollowSelected>();
+        marker2 = marker2Object.GetComponent<MarkerFollowSelected>();
         infoPanel.SetActive(false);
     }
 
@@ -57,7 +61,6 @@ public class MainManager : MonoBehaviour
     }
 
     //text updates
-    //TODO: add end-simulation condition when one entity type is extinct
     void Update()
     {
         List<string> ss = new();
@@ -90,15 +93,23 @@ public class MainManager : MonoBehaviour
         }
         selectedEntity = target;
 
-        marker.target = (target == null) ? null : target.gameObject;
-        markerObject.SetActive(target != null);
+        marker1.target = (target == null) ? null : target.gameObject;
+        marker1Object.SetActive(target != null);
         if (target != null)
         {
-            //scale marker to target
-            markerObject.transform.localScale = target.transform.localScale * 0.15f;
+            //scale marker1 to target
+            marker1Object.transform.localScale = target.transform.localScale * 0.15f;
+            //reset marker2
+            MarkTargetsTarget(target.actionTarget);
         }
 
         infoPanel.SetActive((target != null));
+    }
+
+    public void MarkTargetsTarget(GameObject target)
+    {
+        marker2.target = target;
+        marker2Object.SetActive(target != null);
     }
 
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)

@@ -6,7 +6,6 @@ public class PreyController : Entity
 {
     private float preyForceMultiplier = 300;
 
-    //initialize
     void Start()
     {
         timeToLiveRemaining = DataManager.Instance.settings.Prey_MaxLifespan;
@@ -14,7 +13,9 @@ public class PreyController : Entity
         corpseDecaySeconds = DataManager.Instance.corpseDecaySeconds;
         resizingEntity = true;
         baseSize = 8;
+
         PopUpSelf();
+        UpdateEntitySize();
     }
 
     //make decisions and live!
