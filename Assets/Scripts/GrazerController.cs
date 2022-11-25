@@ -20,7 +20,7 @@ public class GrazerController : Entity
 
     //make decisions and live!
     //actionModes: graze, seek-mate, roam, dead
-    //TODO: fix issue with "roam", where it resets the time counter every two sec, because of switching to other modes
+    //TODO: fix "roam" - resets the time counter every two sec, because of temporary switching to other modes
     protected override void LifeTic()
     {
         float secondsSinceModeChange = Time.realtimeSinceStartup - actionModeStarted;

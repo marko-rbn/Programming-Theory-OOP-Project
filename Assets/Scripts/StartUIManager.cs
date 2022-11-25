@@ -30,7 +30,7 @@ public class StartUIManager : MonoBehaviour
         }
         else
         {
-            //TODO: reinitialize slider values to those stored in DataManager settings
+            settings = DataManager.Instance.settings;
             InitializeEntitySectionFromSettings(predatorSection);
             InitializeEntitySectionFromSettings(grazerSection);
             InitializeEntitySectionFromSettings(plantSection);
@@ -59,7 +59,7 @@ public class StartUIManager : MonoBehaviour
         {
             if ((slider = child.gameObject.GetComponent<Slider>()) != null)
             {
-                float value = DataManager.Instance.settings.GetSliderValue(slider);
+                float value = settings.GetSliderValue(slider);
                 slider.value = value;
                 UpdateSliderDescription(slider, value);
             }

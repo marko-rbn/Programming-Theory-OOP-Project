@@ -193,7 +193,6 @@ public abstract class Entity : MonoBehaviour
         rb.AddForce(direction * forceMultiplier);
     }
 
-    //TODO: prevent roaming too close to the edge... too many accidents
     protected void RandomRoam(float forceMultiplier)
     {
         Vector3 direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));

@@ -27,7 +27,6 @@ public class MainManager : MonoBehaviour
     private GameObject entityContainer;  //parent object for containing all spawns
     public Dictionary<string, int> entityCounts = new();  //count updated only in SpawnOne() and AfterEntityDecay()
 
-    //TODO: add Restart and BackToOptions buttons
     private void Awake()
     {
         entityContainer = GameObject.Find("Entity Container");
