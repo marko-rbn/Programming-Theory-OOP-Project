@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 2568563736486145940}
   - component: {fileID: 2103193628780338779}
   m_Layer: 0
-  m_Name: Entity_Prey
-  m_TagString: Prey
+  m_Name: Entity_Grazer
+  m_TagString: Grazer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,5 +127,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4582cc75579434e46a73aefb5870a806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToLiveRemaining: 0
-  proliferationRate: 0

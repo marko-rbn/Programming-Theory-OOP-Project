@@ -18,10 +18,11 @@ public class FungusController : Entity
         GameObject corpse = FindClosestByTag("Predator", 50, false, "dead");
         if (corpse == null) 
         {
-            corpse = FindClosestByTag("Prey", 50, false, "dead");
+            corpse = FindClosestByTag("Grazer", 50, false, "dead");
         }
         if (corpse != null)
         {
+            //drain nearby corpses
             Consume(corpse.GetComponent<Entity>());
             TryReproduce();
         }
@@ -36,15 +37,16 @@ public class FungusController : Entity
             isActive = true;  //enable normal activity after spawning
             return;
         }
-
+        /*
         if (isActive && !isDead)
         {
-            //Predator or Prey corpse touches
+            //Predator or Grazer corpse touches
             var entity = collision.collider.GetComponent<Entity>();
-            if ((target.CompareTag("Predator") || target.CompareTag("Prey")) && entity.isDead)
+            if ((target.CompareTag("Predator") || target.CompareTag("Grazer")) && entity.isDead)
             {
                 Consume(entity);
             }
         }
+        */
     }
 }

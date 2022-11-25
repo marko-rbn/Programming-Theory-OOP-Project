@@ -128,10 +128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6275c9efe80ac9247bc904738a4774fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToLiveRemaining: 0
-  proliferationRate: 0
-  storedEnergy: 50
-  predatorSpeed: 10
 --- !u!1 &6508439173485013239
 GameObject:
   m_ObjectHideFlags: 0

@@ -170,15 +170,19 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    //TODO: combine InterceptTarget and EvadeTarget so a single direction can be calculated for both
-    //TODO: intercept direction as sum of target vector and direction vector
     protected void InterceptTarget(GameObject target, float forceMultiplier)
     {
-        //direction vector to target
-        Vector3 direction = (target.transform.position - transform.position);
-        direction.y = 0;  //eliminate vertical component
-        direction = direction.normalized;
-        rb.AddForce(direction * forceMultiplier);
+        //determine vectors
+        Vector3 vToTarget = (target.transform.position - transform.position);
+        vToTarget.y = 0;  //eliminate vertical component
+        Vector3 vTarget = target.GetComponent<Rigidbody>().velocity;
+        vTarget.y = 0; //eliminate vertical component
+        Vector3 vOwn = rb.velocity;
+        vOwn.y = 0; //eliminate vertical component
+
+        Vector3 vPush = vToTarget + vTarget - vOwn;
+        vPush = vPush.normalized;
+        rb.AddForce(vPush * forceMultiplier);
     }
 
     protected void EvadeTarget(GameObject target, float forceMultiplier)
@@ -243,8 +247,9 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Consume(Entity target)
     {
-        AdjustEnergy(target.storedEnergy * 0.6f);  //transfer half of target's energy to self
-        target.storedEnergy *= 0.4f;  //NOTE: will limit how much Fungus can drain from corpses
+        float energyToDrain = (target.storedEnergy > 10) ? target.storedEnergy * 0.5f : target.storedEnergy;
+        target.AdjustEnergy(energyToDrain);  //transfer energy from target to self
+        target.storedEnergy -= energyToDrain;
         timeToLiveRemaining += DataManager.Instance.lifeClockBonusForFeeding;  //add bonus time
         target.TriggerDeath();  //kill target, if still alive
     }
@@ -263,7 +268,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     //Polymorphism ;)
-    //Predator and Prey require another (target) to reproduce
+    //Predator and Grazer require another (target) to reproduce
     protected virtual void TryReproduce(Entity target)
     {
         bool successByChance =  Random.Range(0f, 1f) < proliferationRate;

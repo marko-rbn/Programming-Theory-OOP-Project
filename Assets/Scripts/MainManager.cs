@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class MainManager : MonoBehaviour
 {
     public GameObject predatorPrefab;
-    public GameObject preyPrefab;
+    public GameObject grazerPrefab;
     public GameObject plantPrefab;
     public GameObject fungusPrefab;
 
@@ -53,8 +53,8 @@ public class MainManager : MonoBehaviour
         entityCounts.Add(plantPrefab.tag, 0);
         SpawnAllEntitiesOfType(plantPrefab);
 
-        entityCounts.Add(preyPrefab.tag, 0);
-        SpawnAllEntitiesOfType(preyPrefab);
+        entityCounts.Add(grazerPrefab.tag, 0);
+        SpawnAllEntitiesOfType(grazerPrefab);
 
         entityCounts.Add(predatorPrefab.tag, 0);
         SpawnAllEntitiesOfType(predatorPrefab);
@@ -80,9 +80,8 @@ public class MainManager : MonoBehaviour
     {
         infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
         infoPanelText[1].SetText(selectedEntity.storedEnergy.ToString("0.#"));  //energy
-        infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //time remaining
-        infoPanelText[3].SetText(selectedEntity.actionMode + " (" + Mathf.FloorToInt(Time.realtimeSinceStartup - selectedEntity.actionModeStarted) + ")");  //action mode
-        infoPanelText[4].SetText("reserved");
+        infoPanelText[2].SetText(selectedEntity.timeToLiveRemaining.ToString());  //life time remaining
+        infoPanelText[3].SetText(selectedEntity.actionMode + " (" + Mathf.FloorToInt(Time.realtimeSinceStartup - selectedEntity.actionModeStarted) + ")");  //action mode (seconds since mode start)
     }
 
     public void SelectEntity(Entity target)
@@ -153,5 +152,11 @@ public class MainManager : MonoBehaviour
     public void AfterEntityDecay(string entityTag)
     {
         entityCounts[entityTag]--;
+    }
+
+    //load settings scene
+    public void RestartSimulation()
+    {
+        SceneManager.LoadScene(0);
     }
 }

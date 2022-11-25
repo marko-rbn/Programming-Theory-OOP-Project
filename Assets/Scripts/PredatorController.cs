@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PredatorController : Entity
 {
-    private float predatorForceMultiplier = 300;
+    private float predatorForceMultiplier = 400;
 
     void Start()
     {
@@ -36,11 +36,11 @@ public class PredatorController : Entity
                     //continue hunt
                     if (actionTarget == null)
                     {
-                        //acquire target - closest Prey
-                        SetActionTarget(FindClosestByTag("Prey", DataManager.Instance.sensoryRange));
+                        //acquire target - closest Grazer
+                        SetActionTarget(FindClosestByTag("Grazer", DataManager.Instance.sensoryRange));
                         if (actionTarget == null)
                         {
-                            SwitchMode("roam");  //back to roam if no nearby Prey
+                            SwitchMode("roam");  //back to roam if no nearby Grazer
                             break;
                         }
                     }
@@ -121,7 +121,7 @@ public class PredatorController : Entity
         if (isActive && !isDead)
         {
             var entity = collision.collider.GetComponent<Entity>();
-            if (target.CompareTag("Prey") && !entity.isDead)
+            if (target.CompareTag("Grazer") && !entity.isDead)
             {
                 Consume(entity);
             }

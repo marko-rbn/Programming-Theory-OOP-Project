@@ -11,7 +11,7 @@ public class StartUIManager : MonoBehaviour
 {
 
     public GameObject predatorSection;
-    public GameObject preySection;
+    public GameObject grazerSection;
     public GameObject plantSection;
     public GameObject fungusSection;
 
@@ -24,7 +24,7 @@ public class StartUIManager : MonoBehaviour
             //first time through, initialize settings based on current state of Sliders
             settings = new Settings();
             InitializeFromEntitySection(predatorSection);
-            InitializeFromEntitySection(preySection);
+            InitializeFromEntitySection(grazerSection);
             InitializeFromEntitySection(plantSection);
             InitializeFromEntitySection(fungusSection);
         }
@@ -32,7 +32,7 @@ public class StartUIManager : MonoBehaviour
         {
             //TODO: reinitialize slider values to those stored in DataManager settings
             InitializeEntitySectionFromSettings(predatorSection);
-            InitializeEntitySectionFromSettings(preySection);
+            InitializeEntitySectionFromSettings(grazerSection);
             InitializeEntitySectionFromSettings(plantSection);
             InitializeEntitySectionFromSettings(fungusSection);
         }
@@ -59,7 +59,7 @@ public class StartUIManager : MonoBehaviour
         {
             if ((slider = child.gameObject.GetComponent<Slider>()) != null)
             {
-                float value = settings.GetSliderValue(slider);
+                float value = DataManager.Instance.settings.GetSliderValue(slider);
                 slider.value = value;
                 UpdateSliderDescription(slider, value);
             }

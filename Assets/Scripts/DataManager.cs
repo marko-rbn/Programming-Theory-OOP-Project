@@ -46,9 +46,9 @@ public class Settings
     public int Predator_PopulationSize { get; set; }
     public float Predator_ProliferationRate { get; set; }
     public int Predator_MaxLifespan { get; set; }
-    public int Prey_PopulationSize { get; set; }
-    public float Prey_ProliferationRate { get; set; }
-    public int Prey_MaxLifespan { get; set; }
+    public int Grazer_PopulationSize { get; set; }
+    public float Grazer_ProliferationRate { get; set; }
+    public int Grazer_MaxLifespan { get; set; }
     public int Plant_PopulationSize { get; set; }
     public float Plant_ProliferationRate { get; set; }
     public int Plant_MaxLifespan { get; set; }
@@ -60,9 +60,9 @@ public class Settings
     public string Predator_PopulationSize_Desc { get; set; }
     public string Predator_ProliferationRate_Desc { get; set; }
     public string Predator_MaxLifespan_Desc { get; set; }
-    public string Prey_PopulationSize_Desc { get; set; }
-    public string Prey_ProliferationRate_Desc { get; set; }
-    public string Prey_MaxLifespan_Desc { get; set; }
+    public string Grazer_PopulationSize_Desc { get; set; }
+    public string Grazer_ProliferationRate_Desc { get; set; }
+    public string Grazer_MaxLifespan_Desc { get; set; }
     public string Plant_PopulationSize_Desc { get; set; }
     public string Plant_ProliferationRate_Desc { get; set; }
     public string Plant_MaxLifespan_Desc { get; set; }
@@ -117,7 +117,15 @@ public class Settings
         PropertyInfo prop = this.GetType().GetProperty(propName);
         if (prop != null)
         {
-            return (float)prop.GetValue(this);
+            float ret;
+            if (prop.PropertyType == typeof(int))
+            {
+                ret = (int)prop.GetValue(this);
+            } else
+            {
+                ret = (float)prop.GetValue(this);
+            }
+            return ret;
         }
 
         //something went wrong

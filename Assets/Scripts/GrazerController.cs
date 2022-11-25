@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PreyController : Entity
+public class GrazerController : Entity
 {
-    private float preyForceMultiplier = 300;
+    private float grazerForceMultiplier = 300;
 
     void Start()
     {
-        timeToLiveRemaining = DataManager.Instance.settings.Prey_MaxLifespan;
-        proliferationRate = DataManager.Instance.settings.Prey_ProliferationRate;
+        timeToLiveRemaining = DataManager.Instance.settings.Grazer_MaxLifespan;
+        proliferationRate = DataManager.Instance.settings.Grazer_ProliferationRate;
         corpseDecaySeconds = DataManager.Instance.corpseDecaySeconds;
         resizingEntity = true;
         baseSize = 8;
@@ -21,7 +21,6 @@ public class PreyController : Entity
     //make decisions and live!
     //actionModes: graze, seek-mate, roam, dead
     //TODO: fix issue with "roam", where it resets the time counter every two sec, because of switching to other modes
-    //TODO: combining InterceptTarget and EvadeTarget can simplify the logic for Prey
     protected override void LifeTic()
     {
         float secondsSinceModeChange = Time.realtimeSinceStartup - actionModeStarted;
@@ -46,7 +45,7 @@ public class PreyController : Entity
                             if (distance < 50)
                             {
                                 //too close for comfort - evade
-                                EvadeTarget(actionTarget, preyForceMultiplier);
+                                EvadeTarget(actionTarget, grazerForceMultiplier);
                                 AdjustEnergy(-0.1f);
                             }
                             else
@@ -61,7 +60,7 @@ public class PreyController : Entity
                         actionTarget = FindClosestByTag("Plant", DataManager.Instance.sensoryRange);
                         if (actionTarget == null)
                         {
-                            SwitchMode("roam");  //back to roam if no nearby Prey
+                            SwitchMode("roam");  //back to roam if no nearby Grazer
                             break;
                         }
                     }
@@ -76,7 +75,7 @@ public class PreyController : Entity
                         }
                         else
                         {
-                            InterceptTarget(actionTarget, preyForceMultiplier);
+                            InterceptTarget(actionTarget, grazerForceMultiplier);
                             AdjustEnergy(-0.1f);
                         }
                     }
@@ -93,8 +92,8 @@ public class PreyController : Entity
                     //continue seeking mate
                     if (actionTarget == null)
                     {
-                        //acquire target - closest Prey that is also seeking mate
-                        actionTarget = FindClosestByTag("Prey", 1000, true, "seek-mate");  //increase range for seeking mate
+                        //acquire target - closest Grazer that is also seeking mate
+                        actionTarget = FindClosestByTag("Grazer", 1000, true, "seek-mate");  //increase range for seeking mate
                         if (actionTarget == null && secondsSinceModeChange > 10)
                         {
                             SwitchMode("roam");  //back to roam, if no nearby mates and been looking a while
@@ -104,7 +103,7 @@ public class PreyController : Entity
                     //pursue
                     if (actionTarget != null && isActive)
                     {
-                        InterceptTarget(actionTarget, preyForceMultiplier);
+                        InterceptTarget(actionTarget, grazerForceMultiplier);
                         AdjustEnergy(-0.1f);
                     }
                 }
@@ -118,7 +117,7 @@ public class PreyController : Entity
                 else
                 {
                     //continue roaming
-                    RandomRoam(preyForceMultiplier * 0.75f);
+                    RandomRoam(grazerForceMultiplier * 0.75f);
                     AdjustEnergy(-0.1f);
                 }
                 break;
@@ -149,7 +148,7 @@ public class PreyController : Entity
             {
                 Consume(entity);
             }
-            else if (target.CompareTag("Prey") && !entity.isDead)
+            else if (target.CompareTag("Grazer") && !entity.isDead)
             {
                 TryReproduce(entity);
             }

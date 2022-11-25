@@ -1268,7 +1268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   predatorSection: {fileID: 586688315}
-  preySection: {fileID: 1103259248}
+  grazerSection: {fileID: 1103259248}
   plantSection: {fileID: 1632707201}
   fungusSection: {fileID: 1417316843}
 --- !u!4 &272625429
@@ -1819,7 +1819,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 1
-  m_Value: 50
+  m_Value: 20
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -2129,7 +2129,7 @@ GameObject:
   - component: {fileID: 466950282}
   - component: {fileID: 466950283}
   m_Layer: 5
-  m_Name: Prey MaxLifespan Slider
+  m_Name: Grazer MaxLifespan Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3341,6 +3341,7 @@ MonoBehaviour:
   initialSpawnRange: 480
   plantEnergyIncreasePerLifeTic: 2
   plantDispersalAngle: 10
+  sensoryRange: 100
 --- !u!4 &805401053
 Transform:
   m_ObjectHideFlags: 0
@@ -3502,7 +3503,7 @@ GameObject:
   - component: {fileID: 856591495}
   - component: {fileID: 856591496}
   m_Layer: 5
-  m_Name: Prey PopulationSize Slider
+  m_Name: Grazer PopulationSize Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4535,7 +4536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1103259249}
   m_Layer: 5
-  m_Name: Prey Settings Section
+  m_Name: Grazer Settings Section
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4623,7 +4624,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Prey:'
+  m_text: 'Grazers:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6048,7 +6049,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 1
-  m_Value: 50
+  m_Value: 70
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -7409,7 +7410,7 @@ GameObject:
   - component: {fileID: 1806653550}
   - component: {fileID: 1806653551}
   m_Layer: 5
-  m_Name: Prey ProliferationRate Slider
+  m_Name: Grazer ProliferationRate Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
