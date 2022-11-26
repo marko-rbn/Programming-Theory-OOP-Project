@@ -96,7 +96,7 @@ public class MainManager : MonoBehaviour
         if (target != null)
         {
             //scale marker1 to target
-            marker1Object.transform.localScale = target.transform.localScale * 0.15f;
+            marker1Object.transform.localScale = target.transform.localScale * DataManager.Instance.marker1ScaleCoeficient;
             //reset marker2
             MarkTargetsTarget(target.actionTarget);
         }

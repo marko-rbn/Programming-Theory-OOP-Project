@@ -16,6 +16,7 @@ public class DataManager : MonoBehaviour
     public float plantEnergyIncreasePerLifeTic = 2;
     public float plantDispersalAngle = 10f;
     public float sensoryRange = 100;
+    public float marker1ScaleCoeficient = 0.3f;
 
     public static DataManager Instance;
 

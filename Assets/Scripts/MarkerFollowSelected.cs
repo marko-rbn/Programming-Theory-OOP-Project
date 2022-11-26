@@ -12,6 +12,7 @@ public class MarkerFollowSelected : MonoBehaviour
         if (target != null)
         {
             transform.position = target.transform.position;
+            transform.Rotate(Vector3.up * 90 * Time.deltaTime);
         }
     }
 }

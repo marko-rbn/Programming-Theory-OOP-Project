@@ -61,7 +61,7 @@ public abstract class Entity : MonoBehaviour
         if (isSelected)
         {
             //adjust marker size
-            mainManager.marker1Object.transform.localScale = transform.localScale * 0.15f;
+            mainManager.marker1Object.transform.localScale = transform.localScale * DataManager.Instance.marker1ScaleCoeficient;
         }
     }
 
