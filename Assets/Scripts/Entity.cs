@@ -132,6 +132,7 @@ public abstract class Entity : MonoBehaviour
         isSelected = false;
     }
 
+    //ENCAPSULATION
     private void Decayed()
     {
         if (isSelected)
@@ -170,6 +171,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
+    //ABSTRACTION
     protected void InterceptTarget(GameObject target, float forceMultiplier)
     {
         //determine vectors
@@ -185,6 +187,7 @@ public abstract class Entity : MonoBehaviour
         rb.AddForce(vPush * forceMultiplier);
     }
 
+    //ABSTRACTION
     protected void EvadeTarget(GameObject target, float forceMultiplier)
     {
         Vector3 direction = (transform.position - target.transform.position);
@@ -193,6 +196,7 @@ public abstract class Entity : MonoBehaviour
         rb.AddForce(direction * forceMultiplier);
     }
 
+    //ABSTRACTION
     protected void RandomRoam(float forceMultiplier)
     {
         Vector3 direction = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
@@ -247,13 +251,13 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Consume(Entity target)
     {
         float energyToDrain = (target.storedEnergy > 10) ? target.storedEnergy * 0.5f : target.storedEnergy;
-        target.AdjustEnergy(energyToDrain);  //transfer energy from target to self
-        target.storedEnergy -= energyToDrain;
+        target.AdjustEnergy(-energyToDrain);  //drain target
+        target.TriggerDeath();  //and kill target, if still alive
+        AdjustEnergy(energyToDrain);  //transfer energy to self
         timeToLiveRemaining += DataManager.Instance.lifeClockBonusForFeeding;  //add bonus time
-        target.TriggerDeath();  //kill target, if still alive
     }
 
-    //Polymorphism ;)
+    //POLYMORPHISM
     //Plant and Fungus don't need another to reproduce
     protected virtual void TryReproduce()
     {
@@ -266,7 +270,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    //Polymorphism ;)
+    //POLYMORPHISM
     //Predator and Grazer require another (target) to reproduce
     protected virtual void TryReproduce(Entity target)
     {

@@ -75,6 +75,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    //ENCAPSULATION
     private void UpdateInfoDisplay()
     {
         infoPanelText[0].SetText(selectedEntity.tag + (selectedEntity.isDead ? " corpse" : ""));  //entity
@@ -110,6 +111,7 @@ public class MainManager : MonoBehaviour
         marker2Object.SetActive(target != null);
     }
 
+    //ENCAPSULATION
     private void SpawnAllEntitiesOfType(GameObject entityPrefab)
     {
         int entityCount = (int)DataManager.Instance.settings.GetPropertyForTag(entityPrefab.tag, "PopulationSize");
